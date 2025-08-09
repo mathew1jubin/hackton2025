@@ -1,0 +1,52 @@
+<img width="3188" height="1202" alt="image" src="https://github.com/user-attachments/assets/1206499f-8de2-47e1-ae7e-a0be02230c57" />
+
+Typing Speed Simulator 🎯
+
+Basic Details
+
+Team Name: Phol-rider
+
+Team Members
+
+Member 1: Savio Vinoj - Viswajyothi College of Engineering, Vazhakulam
+
+Member 2: Jubin Mathew Baiju - Viswajyothi College of Engineering, Vazhakulam
+
+Project Description
+
+Our project is a platform which can change background colour with respect to the typing speed of the user.
+It can also compute the  keystrokes of the user.
+
+The Problem (that doesn't exist)
+
+Compute the typing speed of the individual user.
+
+The Solution (that nobody asked for)
+
+Our webpage provides the exact keystrokes of the user,which the user can improve.
+
+For Software:
+VS code
+HTML,Javascript,CSS
+
+Implementation
+
+For Software:
+Run
+https://mathew1jubin.github.io/hackton2025/
+
+Project Documentation
+For Software:
+
+Screenshots (Add at least 3)
+![Screenshot1](Add screenshot 1 here with proper name) Add caption explaining what this shows
+
+![Screenshot2](Add screenshot 2 here with proper name) Add caption explaining what this shows
+
+![Screenshot3](Add screenshot 3 here with proper name) Add caption explaining what this shows
+
+
+Team Contributions
+[Name 1]: [Specific contributions]
+[Name 2]: [Specific contributions]
+[Name 3]: [Specific contributions]
