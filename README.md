@@ -41,7 +41,7 @@ For Software:
 ![SCREENSHOT TWO](Screenshot2.png)
 ![SCREENSHOT THREE](Screenshot3.png)
 ![SCREENSHOT FOUR](Screenshot4.png)
-![SCREENSHOT FIVE(Screenshot5.png)
+![SCREENSHOT FIVE](Screenshot5.png)
 
 
 Team Contributions
