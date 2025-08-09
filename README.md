@@ -38,15 +38,8 @@ https://mathew1jubin.github.io/hackton2025/
 Project Documentation
 For Software:
 
-Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name) Add caption explaining what this shows
-
-![Screenshot2](Add screenshot 2 here with proper name) Add caption explaining what this shows
-
-![Screenshot3](Add screenshot 3 here with proper name) Add caption explaining what this shows
 
 
 Team Contributions
-[Name 1]: [Specific contributions]
-[Name 2]: [Specific contributions]
-[Name 3]: [Specific contributions]
+[Name 1]: Savio Vinoj
+[Name 2]: Jubin Mathew Baiju
