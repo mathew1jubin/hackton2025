@@ -3,125 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Color Typing</title>
-    <!-- Tailwind CSS for modern, responsive styling -->
+    <title>Writer SIMULATOR</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Define a CSS variable for the background color */
         :root {
-            --bg-color: hsl(200, 50%, 20%); /* Default cool blue */
+            bg-color: hsl(0, 0%, 100%);
         }
         body {
-            background-color: var(--bg-color);
-            transition: background-color 0.5s ease-in-out; /* Smooth color transition */
+            background-color: var(bg-color);
+            transition: background-color 0.5s ease-in-out;
             font-family: 'Inter', sans-serif;
         }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
     </style>
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen text-white p-4">
 
-    <!-- Main container for the app -->
-    <div class="max-w-4xl w-full p-8 md:p-12 bg-gray-800 rounded-xl shadow-2xl flex flex-col items-center">
-        <!-- Title and description -->
-        <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-center">Dynamic Color Typing</h1>
-        <p class="text-gray-400 text-lg md:text-xl text-center mb-8">Start typing below to see the colors change with your speed.</p>
+    <!-- Tabs Navigation -->
+    <div class="flex space-x-4 mb-6">
+        <button id="tabTyping" class="px-4 py-2 bg-blue-500 rounded">Typing</button>
+        <button id="tabResult" class="px-4 py-2 bg-gray-600 rounded">Results</button>
+    </div>
 
-        <!-- Text area where the user will type -->
+    <!-- Tab 1: Typing -->
+    <div id="typingTab" class="tab-content active max-w-4xl w-full p-8 bg-gray-800 rounded-xl shadow-2xl flex flex-col items-center">
+        <h1 class="text-4xl font-extrabold mb-4 text-center">TYPING SPEED SIMULATOR</h1>
+        <p class="text-gray-400 text-lg text-center mb-8">Start typing below to see the colors change with your speed.</p>
+
         <textarea
+            style="color: black;"
             id="typingArea"
-            rows="10"
-            class="w-full p-6 text-xl bg-gray-900 rounded-lg shadow-inner border-2 border-gray-700 focus:border-blue-500 focus:outline-none transition-all duration-300 resize-none"
+            rows="2"
+            class="w-full p-6 text-xl bg-black-400 rounded-lg shadow-inner border-2 border-gray-700 focus:border-blue-500 focus:outline-none resize-none"
             placeholder="Type here..."
             autofocus
         ></textarea>
 
-        <!-- Speed display -->
         <div class="mt-8 text-2xl font-semibold text-center">
             <span class="text-gray-400">Typing Speed: </span>
-            <span id="speedDisplay" class="text-blue-400 font-bold transition-colors duration-300">0 ms per keystroke</span>
+            <span id="speedDisplay" class="text-blue-400 font-bold">0 ms per keystroke</span>
         </div>
     </div>
 
+    <!-- Tab 2: Results -->
+    <div id="resultTab" class="tab-content max-w-4xl w-full p-8 bg-gray-800 rounded-xl shadow-2xl flex flex-col items-center">
+        <h1 class="text-4xl font-extrabold mb-4 text-center">Your Typing Results</h1>
+        <p class="text-lg text-gray-400 mb-6">Here’s how you performed:</p>
+        <ul class="text-xl space-y-3">
+            <li><span class="text-gray-300">Total Keystrokes:</span> <span id="resultKeystrokes" class="text-white font-bold">0</span></li>
+            <li><span class="text-gray-300">Average Speed:</span> <span id="resultAverage" class="text-white font-bold">0 ms</span></li>
+            <li><span class="text-gray-300">Fastest Speed:</span> <span id="resultFastest" class="text-white font-bold">0 ms</span></li>
+            <li><span class="text-gray-300">Slowest Speed:</span> <span id="resultSlowest" class="text-white font-bold">0 ms</span></li>
+        </ul>
+    </div>
+
     <script>
-        // Get references to the HTML elements
         const body = document.body;
         const typingArea = document.getElementById('typingArea');
         const speedDisplay = document.getElementById('speedDisplay');
 
-        // Variables to track typing speed
-        let lastKeyPressTime = 0;
-        let speed = 0; // Time in milliseconds between keystrokes
+        // Result elements
+        const resultKeystrokes = document.getElementById('resultKeystrokes');
+        const resultAverage = document.getElementById('resultAverage');
+        const resultFastest = document.getElementById('resultFastest');
+        const resultSlowest = document.getElementById('resultSlowest');
 
-        // Add a 'keyup' event listener to the typing area
+        let lastKeyPressTime = 0;
+        let speed = 0;
+        let speeds = [];
+        let totalKeystrokes = 0;
+
         typingArea.addEventListener('keyup', () => {
             const currentTime = new Date().getTime();
 
-            // Only calculate speed if it's not the very first keypress
             if (lastKeyPressTime !== 0) {
-                // Calculate the time elapsed since the last keypress
                 const timeDelta = currentTime - lastKeyPressTime;
-
-                // Simple speed calculation: speed is the time between keystrokes
-                // Lower 'speed' value means faster typing.
                 speed = timeDelta;
+                speeds.push(speed);
+                totalKeystrokes++;
 
-                // Update the speed display with the new value
                 speedDisplay.textContent = `${speed} ms per keystroke`;
-            }
 
-            // Update the last key press time for the next calculation
+                // --- Color Logic ---
+                const fastTypingThreshold = 150;
+                const slowTypingThreshold = 600;
+                let hue;
+
+                if (speed <= fastTypingThreshold && speed > 0) {
+                    hue = 0;
+                    speedDisplay.classList.replace('text-blue-400', 'text-red-400');
+                } else if (speed > slowTypingThreshold) {
+                    hue = 240;
+                    speedDisplay.classList.replace('text-red-400', 'text-blue-400');
+                } else {
+                    const speedRange = slowTypingThreshold - fastTypingThreshold;
+                    const normalizedSpeed = (speed - fastTypingThreshold) / speedRange;
+                    hue = 240 - (normalizedSpeed * 240);
+                    speedDisplay.classList.replace('text-red-400', 'text-blue-400');
+                }
+                body.style.backgroundColor = `hsl(${hue}, 50%, 20%)`;
+            }
             lastKeyPressTime = currentTime;
-
-            // --- Color Logic ---
-            // Map the speed (time delta) to a color.
-            // We'll use the HSL color model (Hue, Saturation, Lightness).
-            // Hue (H) is a value from 0-360. Red is 0, Yellow is 60, Green is 120, Blue is 240.
-            // We want to go from a cool color (e.g., blue or green) for slow typing to red for fast typing.
-            // A good range for our purpose is from a slow-typing color (e.g., Hue 240) to a fast-typing color (Hue 0).
-            
-            // Define thresholds for slow and fast typing (in milliseconds)
-            const fastTypingThreshold = 150; // Faster than this is considered fast
-            const slowTypingThreshold = 600;  // Slower than this is considered slow
-
-            let hue;
-
-            if (speed <= fastTypingThreshold && speed > 0) {
-                // Very fast typing: set hue to a shade of red
-                hue = 0;
-                // Make the speed display text red as well
-                speedDisplay.classList.remove('text-blue-400');
-                speedDisplay.classList.add('text-red-400');
-            } else if (speed > slowTypingThreshold) {
-                // Slow typing: set hue to a cool color like blue
-                hue = 240;
-                // Make the speed display text blue again
-                speedDisplay.classList.remove('text-red-400');
-                speedDisplay.classList.add('text-blue-400');
-            } else {
-                // Moderate speed: interpolate the hue between red (0) and blue (240)
-                // The map function maps one range of numbers to another.
-                // We map speed (slow to fast) to hue (blue to red).
-                const speedRange = slowTypingThreshold - fastTypingThreshold;
-                const normalizedSpeed = (speed - fastTypingThreshold) / speedRange;
-                hue = 240 - (normalizedSpeed * 240); // 240 for slow, 0 for fast
-                
-                // Ensure the speed display text is blue for moderate speeds
-                speedDisplay.classList.remove('text-red-400');
-                speedDisplay.classList.add('text-blue-400');
-            }
-            
-            // Set the background color using the calculated hue
-            // The saturation and lightness values are kept constant for a clean look
-            body.style.backgroundColor = `hsl(${hue}, 50%, 20%)`;
         });
 
-        // Add a 'keydown' event listener to prevent backspace from messing up the timing
-        // The event handler will be called just before the 'keyup'
-        typingArea.addEventListener('keydown', (e) => {
-            // The lastKeyPressTime is only reset when the typing starts again
-            // after the page has been loaded, it's not set to 0 when there are no more keypresses.
-            // This is to make sure that the timing is not messed up by a key press
-            // from before a long pause in typing.
+        // Tab Switching
+        const typingTabBtn = document.getElementById('tabTyping');
+        const resultTabBtn = document.getElementById('tabResult');
+        const typingTab = document.getElementById('typingTab');
+        const resultTab = document.getElementById('resultTab');
+
+        typingTabBtn.addEventListener('click', () => {
+            typingTab.classList.add('active');
+            resultTab.classList.remove('active');
+            typingTabBtn.classList.replace('bg-gray-600', 'bg-blue-500');
+            resultTabBtn.classList.replace('bg-blue-500', 'bg-gray-600');
+        });
+
+        resultTabBtn.addEventListener('click', () => {
+            typingTab.classList.remove('active');
+            resultTab.classList.add('active');
+            resultTabBtn.classList.replace('bg-gray-600', 'bg-blue-500');
+            typingTabBtn.classList.replace('bg-blue-500', 'bg-gray-600');
+
+            // Calculate results
+            if (speeds.length > 0) {
+                const avgSpeed = Math.round(speeds.reduce((a, b) => a + b, 0) / speeds.length);
+                const fastest = Math.min(...speeds);
+                const slowest = Math.max(...speeds);
+
+                resultKeystrokes.textContent = totalKeystrokes;
+                resultAverage.textContent = `${avgSpeed} ms`;
+                resultFastest.textContent = `${fastest} ms`;
+                resultSlowest.textContent = `${slowest} ms`;
+            }
         });
     </script>
 
